@@ -12,6 +12,7 @@ use Override;
 class ProductImages extends EditRecord
 {
     protected static string $resource = ProductResource::class;
+    protected static ?string $navigationIcon = 'heroicon-s-photo';
 
     public function form(Form $form): Form
     {
