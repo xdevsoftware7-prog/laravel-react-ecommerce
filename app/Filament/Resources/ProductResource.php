@@ -50,7 +50,7 @@ class ProductResource extends Resource
                         $set('category_id', null);
                     }),
                     Select::make('category_id')->relationship(
-                        name: 'Category',
+                        name: 'category',
                         titleAttribute: 'name',
                         modifyQueryUsing: function (Builder  $query, callable $get) {
                             $departement = $get('departement_id');
@@ -73,7 +73,7 @@ class ProductResource extends Resource
                         'underline',
                         'undo',
                         'table'
-                    ]),
+                    ])->columnSpan(2),
                     TextInput::make('price')->required()->numeric(),
                     TextInput::make('quantity')->integer(),
                     Select::make('status')->options(ProductStatusEnum::labels())->default(ProductStatusEnum::Draft->value)->required()
@@ -132,7 +132,7 @@ class ProductResource extends Resource
             $page->generateNavigationItems([
                 EditProduct::class,
                 ProductImages::class,
-                ProductVariation::class
+                // ProductVariation::class
             ]);
     }
 
