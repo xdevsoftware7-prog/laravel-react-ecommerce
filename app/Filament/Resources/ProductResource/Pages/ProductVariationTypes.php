@@ -27,7 +27,7 @@ class ProductVariationTypes extends EditRecord
                     Select::make('type')->options(ProductVariationTypesEnum::lables())->required(),
                     Repeater::make('options')->relationship()->collapsible()->schema([
                         TextInput::make('name')->columnSpan(2)->required(),
-                        SpatieMediaLibraryFileUpload::make('images')->image()->multiple()->openable()->panelLayout('grid')->collection('images')->reorderable()->appendFiles()->preserveFilenames()->columnSpan(2)
+                        SpatieMediaLibraryFileUpload::make('images')->image()->multiple()->openable()->panelLayout('grid')->collection('images')->reorderable()->appendFiles()->preserveFilenames()->columnSpan(3)
                     ])->columnSpan(2)
                 ])
             ]
