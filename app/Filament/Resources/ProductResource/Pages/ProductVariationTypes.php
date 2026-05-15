@@ -16,7 +16,7 @@ use Override;
 class ProductVariationTypes extends EditRecord
 {
     protected static string $resource = ProductResource::class;
-    protected static ?string $navigationIcon = 'heroicon-s-photo';
+    protected static ?string $navigationIcon = 'heroicon-m-numbered-list';
 
     public function form(Form $form): Form
     {
