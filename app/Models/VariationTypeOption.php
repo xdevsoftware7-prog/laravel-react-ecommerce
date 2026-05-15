@@ -10,6 +10,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class VariationTypeOption extends Model implements HasMedia
 {
     use InteractsWithMedia;
+
+    public $timestamps = false;
+
     public function registerMediaConversions(?Media $media = null): void
     {
         $this->addMediaConversion('thumb')->width(100);
