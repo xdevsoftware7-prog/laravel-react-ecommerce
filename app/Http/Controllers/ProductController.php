@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ProductStatusEnum;
-use App\Filament\Resources\ProductResource;
+use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductListResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -24,7 +24,8 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         return Inertia::render('Product/Show', [
-            'product' => new ProductListResource($product),
+            'product' => new ProductResource($product),
+            'variationsOptions' => request('options',[]),
         ]);
     }
 }

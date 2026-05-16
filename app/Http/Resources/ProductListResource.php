@@ -15,20 +15,22 @@ class ProductListResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'=>$this->id,
-            'title'=>$this->title,
-            'slug'=>$this->slug,
-            'price'=>$this->price,
-            'quantity'=>$this->quantity,
-            'image'=>$this->getFirstMediaUrl('images','thumb'),
-            'user'=>[
-                'id'=>$this->user->id,
-                'name'=>$this->user->name,
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'price' => $this->price,
+            'quantity' => $this->quantity,
+            'image' => $this->hasMedia('images') && $this->getFirstMedia('images')->hasGeneratedConversion('thumb')
+                ? $this->getFirstMediaUrl('images', 'thumb')
+                : $this->getFirstMediaUrl('images'),
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
             ],
-            'departement'=>
+            'departement' =>
             [
-                'id'=>$this->departement->id,
-                'name'=>$this->departement->name,
+                'id' => $this->departement->id,
+                'name' => $this->departement->name,
             ]
         ];
     }
