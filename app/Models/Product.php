@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Override;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+//use Override;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -32,4 +33,10 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(VariationType::class);
     }
+
+   public function variations(): HasMany
+   {
+       return $this->hasMany(ProductVariation::class , 'product_id');
+
+   }
 }
