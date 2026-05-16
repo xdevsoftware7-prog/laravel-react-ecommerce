@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Enums\Enums;
+namespace App\Enums;
 
-enum ProductVariationTypesEnum: string
+enum ProductVariationTypeEnum: string
 {
     case Select = 'Select';
     case Radio = 'Radio';
