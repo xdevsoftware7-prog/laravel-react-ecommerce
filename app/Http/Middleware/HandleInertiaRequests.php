@@ -38,7 +38,6 @@ class HandleInertiaRequests extends Middleware
 
         $cartItems = $cartService->getCartItems();
 
-        dd($totalPrice,$totalQunatity,$cartItems);
         return [
             ...parent::share($request),
             'auth' => [
