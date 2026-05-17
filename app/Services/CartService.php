@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\VariationTypeOption;
 use Illuminate\Support\Facades\Auth;
@@ -93,7 +94,18 @@ class CartService
         return $total;
     }
 
-    protected function updateItemQuantityInDatabase(int $productId, int $quantity, array $optionIds): void {}
+    protected function updateItemQuantityInDatabase(int $productId, int $quantity, array $optionIds): void {
+        $userId = Auth::id();
+        $cartItem = CartItem::where('user_id',$userId)
+        ->where('product_id',$productId)
+        ->where('variation_type_option_ids',json_encode($optionIds))->first();
+
+        if($cartItem){
+            $cartItem->update([
+                'qunatity'=>$quantity
+            ]);
+        }
+    }
 
     protected function saveItemToDatabase(int $productId, int $quantity, array $optionIds): void {}
 
