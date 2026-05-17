@@ -16,7 +16,7 @@ function ProductItem({ product }: { product: Product }) {
       >
         <figure className="w-full h-full">
           <img
-            src={product.image}
+            src={product.image.name}
             alt={product.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
