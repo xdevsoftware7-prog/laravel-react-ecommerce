@@ -31,12 +31,12 @@ function MiniCardDropdown() {
         <div className="card-body">
           <span className="text-lg font-bold">{totalQuantity} Items</span>
           <div className="my-4 max-h-[300px] overflow-auto">
-            {miniCartItems.length === 0 && (
+            {miniCartItems?.length === 0 && (
                 <div className="py-2 text-gray-500 text-center">
                     You don't have any items yet
                 </div>
             )}
-            {miniCartItems.map((item)=>(
+            {miniCartItems?.map((item)=>(
                 <div key={item.id} className="flex gap-4 p-3">
                     <Link href={route('product.show', item.slug)} className='w-16 h-16 justify-center items-center'>
                         <img src={item.image} alt={item.title} className='max-w-full max-h-full' />
