@@ -66,10 +66,10 @@ class CartService
                     if (!$product) continue;
 
                     $optionInfo = [];
-                    $options = VariationTypeOption::with("variationType")->whereIn('id', $cartItem['option_ids'])->get();
+                    $options = VariationTypeOption::with("variationType")->whereIn('id', $cartItem['variation_type_options_ids'])->get();
 
                     $imageUrl = null;
-                    foreach ($cartItem['option_ids'] as $option_id) {
+                    foreach ($cartItem['variation_type_options_ids'] as $option_id) {
                         $option = data_get($options, $option_id);
                         if (!$imageUrl) {
                             $imageUrl = $option->getFirstMediaUrl('images', 'small');
@@ -91,7 +91,7 @@ class CartService
                         'slug' => $product->slug,
                         'price' => $cartItem['price'],
                         'quantity' => $cartItem['quantity'],
-                        'option_ids' => $cartItem['option_ids'],
+                        'option_ids' => $cartItem['variation_type_options_ids'],
                         'options' => $optionInfo,
                         'image' => $imageUrl ?: $product->getFirstMediaUrl('images', 'small'),
                         'user' => [
@@ -230,5 +230,15 @@ class CartService
     {
         $cartItems = json_decode(Cookie::get(self::COOKIE_NAME, '[]'), true);
         return $cartItems;
+    }
+
+    public function getCartItemsGrouped(){
+        $cartItems = $this->getCartItems();
+        return collect($cartItems)->groupBy(fn($item)=>$item['user']['id'])->map(fn($items,$userId)=>[
+            'user'=>$items->first()['user'],
+            'items'=>$items->toArray(),
+            'total_quantity'=>$items->sum('quantity'),
+            'total_price'=>$items->sum(fn($item)=>$item['price']*$item['quantity'])
+        ])->toArray();
     }
 }
