@@ -72,6 +72,13 @@ export type CartItem = {
     options: VariationTypeOption[]
 }
 
+export type GroupedCartItem = {
+    user: User;
+    items: CartItem[];
+    totalPrice: number;
+    totalQuantity: number;
+}
+
 export type PaginationProps<T> = {
     data: Array<T>;
   
