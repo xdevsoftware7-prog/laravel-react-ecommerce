@@ -59,6 +59,19 @@ export type Product = {
   }>;
 };
 
+
+export type CartItem = {
+    id: number,
+    product_id: number,
+    title: string,
+    slug: string,
+    price : number,
+    quantity: number,
+    image: string,
+    option_ids : Record<String,number>,
+    options: VariationTypeOption[]
+}
+
 export type PaginationProps<T> = {
     data: Array<T>;
   
@@ -73,5 +86,6 @@ export type PageProps<
     };
     ziggy: Config & { location: string };
     totalQuantity:number,
-    totalPrice:number
+    totalPrice:number,
+    cartItems: CartItem[]
 };
