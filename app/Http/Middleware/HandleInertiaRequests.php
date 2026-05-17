@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
             'success' => session('success'),
             'totalPrice'=>$totalPrice,
             'totalQuantity'=>$totalQunatity,
-            'cartItems'=>$cartItems
+            'minCartItems'=>$cartItems
         ];
     }
 }
