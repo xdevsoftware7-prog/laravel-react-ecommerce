@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\VariationType;
 use App\Models\VariationTypeOption;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -18,7 +19,21 @@ class CartService
     protected const COOKIE_LIFETIME = 60 * 24 * 365; // 1 year
 
 
-    public function addItemToCart(Product $product, int $quantity = 1, $optionIds = null) {}
+    public function addItemToCart(Product $product, int $quantity = 1, $optionIds = null)
+    {
+        if ($optionIds === null) {
+            $optionIds = $product->variationTypes->mapWithKeys(
+                fn(VariationType $type) => [$type->id => $type->optoins[0]?->id]
+            )->toArray();
+        }
+
+        $price = $product->getPriceForOptions($optionIds);
+        if (Auth::check()) {
+            $this->saveItemToDatabase($product->id, $quantity, $price, $optionIds);
+        } else {
+            $this->saveItemToCookies($product->id, $quantity, $price, $optionIds);
+        }
+    }
 
     public function updateItemQuantity(int $productId, int $quantity, $optionIds = null) {}
     public function removeItemFromCart(int $productId, $optionIds = null) {}
