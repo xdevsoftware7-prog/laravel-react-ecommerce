@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CartService
 {
@@ -120,7 +121,7 @@ class CartService
         Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
     }
 
-    protected function saveItemToDatabase(int $productId, int $quantity, array $optionIds): void {
+    protected function saveItemToDatabase(int $productId, int $quantity,float $price, array $optionIds): void {
         $userId = Auth::id();
         ksort($optionIds);
         $cartItem = CartItem::where('user_id',$userId)->where('product_id',$productId)->where('variation_type_option_ids',json_encode($optionIds))->first();
@@ -140,7 +141,24 @@ class CartService
         }
     }
 
-    protected function saveItemToCookies(int $productId, int $quantity, array $optionIds): void {}
+    protected function saveItemToCookies(int $productId, int $quantity, float $price, array $optionIds): void {
+        $cartItems = $this->getCarItemsFromCookies();
+        ksort($optionIds);
+        $itemKey = $productId .'_'. json_encode($optionIds);
+        if(isset($cartItems[$itemKey])){
+            $cartItems[$itemKey]['quantity'] += $quantity;
+            $cartItem[$itemKey]['price'] = $price;
+        }else{
+            $cartItems[$itemKey] = [
+                'id' => Str::uuid(),
+                'product_id'=>$productId,
+                'quantity'=>$quantity,
+                'price'=>$price,
+                'option_ids'=>$optionIds
+            ];
+        }
+        Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
+    }
 
     protected function removeItemFromDatabase(int $productId, int $quantity, array $optionIds): void {}
 
