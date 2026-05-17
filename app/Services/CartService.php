@@ -35,18 +35,20 @@ class CartService
         }
     }
 
-    public function updateItemQuantity(int $productId, int $quantity, $optionIds = null) {
-        if(Auth::check()){
-            $this->updateItemQuantityInDatabase($productId,$quantity,$optionIds);
-        }else{
-            $this->updateItemQuantityInCookies($productId,$quantity,$optionIds);
+    public function updateItemQuantity(int $productId, int $quantity, $optionIds = null)
+    {
+        if (Auth::check()) {
+            $this->updateItemQuantityInDatabase($productId, $quantity, $optionIds);
+        } else {
+            $this->updateItemQuantityInCookies($productId, $quantity, $optionIds);
         }
     }
-    public function removeItemFromCart(int $productId, $optionIds = null) {
-        if(Auth::check()){
-            $this->removeItemFromDatabase($productId,$optionIds);
-        }else{
-            $this->removeItemFromCookies($productId,$optionIds);
+    public function removeItemFromCart(int $productId, $optionIds = null)
+    {
+        if (Auth::check()) {
+            $this->removeItemFromDatabase($productId, $optionIds);
+        } else {
+            $this->removeItemFromCookies($productId, $optionIds);
         }
     }
     public function  getCartItems()
@@ -232,13 +234,14 @@ class CartService
         return $cartItems;
     }
 
-    public function getCartItemsGrouped(){
+    public function getCartItemsGrouped()
+    {
         $cartItems = $this->getCartItems();
-        return collect($cartItems)->groupBy(fn($item)=>$item['user']['id'])->map(fn($items,$userId)=>[
-            'user'=>$items->first()['user'],
-            'items'=>$items->toArray(),
-            'total_quantity'=>$items->sum('quantity'),
-            'total_price'=>$items->sum(fn($item)=>$item['price']*$item['quantity'])
+        return collect($cartItems)->groupBy(fn($item) => $item['user']['id'])->map(fn($items, $userId) => [
+            'user' => $items->first()['user'],
+            'items' => $items->toArray(),
+            'totalQuantity' => $items->sum('quantity'),
+            'totalPrice' => $items->sum(fn($item) => $item['price'] * $item['quantity'])
         ])->toArray();
     }
 }
