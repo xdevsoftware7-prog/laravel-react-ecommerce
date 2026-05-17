@@ -12,23 +12,25 @@ class CartController extends Controller
      * Display a listing of the resource.
      */
     public function index(CartService $cartService)
-    {   
+    {
         dd($cartService);
     }
 
-  
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request, Product $product, CartService $cartService)
     {
-        $request->mergeIfMissing(['quantity'=>1]);
+        $request->mergeIfMissing(['quantity' => 1]);
         $data = $request->validate([
-            'options_ids'=>['nullable','array'],
-            'quantity'=>['required','integer','min:1'],
+            'options_ids' => ['nullable', 'array'],
+            'quantity' => ['required', 'integer', 'min:1'],
 
         ]);
+        $cartService->addItemToCart($product, $data['qunatity'], $data['option_ids']);
+        return back()->with('success','Product addedd to cart successfully!');
     }
 
     /**
@@ -42,7 +44,7 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request ,Product $product, CartService $cartService)
+    public function destroy(Request $request, Product $product, CartService $cartService)
     {
         //
     }
