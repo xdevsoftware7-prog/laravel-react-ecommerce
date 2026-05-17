@@ -16,7 +16,7 @@ class CartController extends Controller
     {
         return Inertia::render('Cart/Index', [
             'cartItems'=>$cartService->getCartItemsGrouped(),
-            
+
         ]);
     }
 
@@ -60,5 +60,10 @@ class CartController extends Controller
         $optionIds = $request->input('option_ids');
         $cartService->removeItemFromCart($product->id, $optionIds);
         return back()->with('success', 'Product was removed');
+    }
+
+
+    public function checkout(){
+        
     }
 }
