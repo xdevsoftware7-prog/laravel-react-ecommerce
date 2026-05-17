@@ -156,7 +156,7 @@ class CartService
     {
         $userId = Auth::id();
         ksort($optionIds);
-        $cartItem = CartItem::where('user_id', $userId)->where('product_id', $productId)->where('variation_type_option_ids', json_encode($optionIds))->first();
+        $cartItem = CartItem::where('user_id', $userId)->where('product_id', $productId)->where('variation_type_options_ids', json_encode($optionIds))->first();
 
         if ($cartItem) {
             $cartItem->update([
@@ -168,7 +168,7 @@ class CartService
                 'product_id' => $productId,
                 'quantity' => $quantity,
                 'price' => $price,
-                'variation_type_option_ids' => $optionIds
+                'variation_type_options_ids' => $optionIds
             ]);
         }
     }
