@@ -177,7 +177,7 @@ class CartService
 
     protected function removeItemFromCookies(int $productId, int $quantity, array $optionIds): void
     {
-        $cartItems = json_decode(Cookie::get(self::COOKIE_NAME, '[]'), true);
+        $cartItems = $this->getCarItemsFromCookies();
         ksort($optionIds);
 
         $cartKey = $productId . '_' . json_encode($optionIds);
@@ -192,12 +192,16 @@ class CartService
             return [
                 'id' => $cartItem->id,
                 'product_id' => $cartItem->product_id,
-                'quantity'=>$cartItem->quantity,
-                'price'=>$cartItem->price,
-                'option_ids'=>$cartItem->variation_type_options
+                'quantity' => $cartItem->quantity,
+                'price' => $cartItem->price,
+                'option_ids' => $cartItem->variation_type_option_id
             ];
         })->toArray();
         return $cartItems;
     }
-    protected function getCarItemsFromCookies() {}
+    protected function getCarItemsFromCookies()
+    {
+        $cartItems = json_decode(Cookie::get(self::COOKIE_NAME, '[]'), true);
+        return $cartItems;
+    }
 }
