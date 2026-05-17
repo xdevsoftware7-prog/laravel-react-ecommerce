@@ -153,7 +153,7 @@ class ProductVariations extends EditRecord
 
             //prepare the data structure for the data
             $formatedData[] = [
-                'id' => $option['id'],
+                'id' => $option['id'] ?? null,
                 'variation_type_option_ids' => $variationTypeOptionIds,
                 'quantity' => $quantity,
                 'price' => $price,
@@ -170,23 +170,23 @@ class ProductVariations extends EditRecord
         unset($data['variations']);
 
         $variations = collect($variations)
-            ->map(function ($variation){
-            return [
-                'id' => $variation['id'],
+            ->map(function ($variation) use ($record) {
+            $data = [
+                'product_id' => $record->id,
                 'variation_type_option_ids' => json_encode($variation['variation_type_option_ids']),
                 'quantity' => $variation['quantity'],
                 'price' => $variation['price'],
             ];
+            if (!empty($variation['id'])) {
+                $data['id'] = $variation['id'];
+            }
+            return $data;
         })->toArray();
 
         $record->update($data);
         $record->variations()->delete();
-        $record->variations()->upsert($variations,
-            ['id'],
-            ['variation_type_option_ids'],
-            ['quantity'],
-            ['price']
-        );
+        
+        \App\Models\ProductVariation::insert($variations);
 
         return $record;
     }
