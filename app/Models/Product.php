@@ -46,6 +46,11 @@ class Product extends Model implements HasMedia
     {
         return $query->where('status',ProductStatusEnum::Published);
     }
+
+    public function scopeForWebsite(Builder $query){
+        return $query->published();
+    }
+
     public function variationTypes()
     {
         return $this->hasMany(VariationType::class);
@@ -56,4 +61,6 @@ class Product extends Model implements HasMedia
        return $this->hasMany(ProductVariation::class , 'product_id');
 
    }
+
+
 }
