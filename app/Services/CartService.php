@@ -35,8 +35,20 @@ class CartService
         }
     }
 
-    public function updateItemQuantity(int $productId, int $quantity, $optionIds = null) {}
-    public function removeItemFromCart(int $productId, $optionIds = null) {}
+    public function updateItemQuantity(int $productId, int $quantity, $optionIds = null) {
+        if(Auth::check()){
+            $this->updateItemQuantityInDatabase($productId,$quantity,$optionIds);
+        }else{
+            $this->updateItemQuantityInCookies($productId,$quantity,$optionIds);
+        }
+    }
+    public function removeItemFromCart(int $productId, $optionIds = null) {
+        if(Auth::check()){
+            $this->removeItemFromDatabase($productId,$optionIds);
+        }else{
+            $this->removeItemFromCookies($productId,$optionIds);
+        }
+    }
     public function  getCartItems()
     {
         try {
@@ -181,7 +193,7 @@ class CartService
         Cookie::queue(self::COOKIE_NAME, json_encode($cartItems), self::COOKIE_LIFETIME);
     }
 
-    protected function removeItemFromDatabase(int $productId, int $quantity, array $optionIds): void
+    protected function removeItemFromDatabase(int $productId, array $optionIds): void
     {
         $userId = Auth::id();
         ksort($optionIds);
@@ -190,7 +202,7 @@ class CartService
             ->where('variation_type_option_ids', json_encode($optionIds))->delete();
     }
 
-    protected function removeItemFromCookies(int $productId, int $quantity, array $optionIds): void
+    protected function removeItemFromCookies(int $productId, array $optionIds): void
     {
         $cartItems = $this->getCarItemsFromCookies();
         ksort($optionIds);
