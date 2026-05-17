@@ -72,7 +72,7 @@ export type CartItem = {
     options: VariationTypeOption[]
 }
 
-export type GroupedCartItem = {
+export type GroupedCartItems = {
     user: User;
     items: CartItem[];
     totalPrice: number;
