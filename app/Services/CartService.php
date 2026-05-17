@@ -175,15 +175,29 @@ class CartService
             ->where('variation_type_option_ids', json_encode($optionIds))->delete();
     }
 
-    protected function removeItemFromCookies(int $productId, int $quantity, array $optionIds): void {
-        $cartItems = json_decode(Cookie::get(self::COOKIE_NAME,'[]'),true);
+    protected function removeItemFromCookies(int $productId, int $quantity, array $optionIds): void
+    {
+        $cartItems = json_decode(Cookie::get(self::COOKIE_NAME, '[]'), true);
         ksort($optionIds);
 
         $cartKey = $productId . '_' . json_encode($optionIds);
         unset($cartItems[$cartKey]);
-        Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
+        Cookie::queue(self::COOKIE_NAME, json_encode($cartItems), self::COOKIE_LIFETIME);
     }
 
-    protected function getCarItemsFromDatabase() {}
+    protected function getCarItemsFromDatabase()
+    {
+        $userId = Auth::id();
+        $cartItems = CartItem::where('user_id', $userId)->get()->map(function ($cartItem) {
+            return [
+                'id' => $cartItem->id,
+                'product_id' => $cartItem->product_id,
+                'quantity'=>$cartItem->quantity,
+                'price'=>$cartItem->price,
+                'option_ids'=>$cartItem->variation_type_options
+            ];
+        })->toArray();
+        return $cartItems;
+    }
     protected function getCarItemsFromCookies() {}
 }
