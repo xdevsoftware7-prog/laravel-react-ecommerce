@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\VariationTypeOption;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CartService
@@ -119,7 +120,25 @@ class CartService
         Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
     }
 
-    protected function saveItemToDatabase(int $productId, int $quantity, array $optionIds): void {}
+    protected function saveItemToDatabase(int $productId, int $quantity, array $optionIds): void {
+        $userId = Auth::id();
+        ksort($optionIds);
+        $cartItem = CartItem::where('user_id',$userId)->where('product_id',$productId)->where('variation_type_option_ids',json_encode($optionIds))->first();
+        
+        if($cartItem){
+            $cartItem->update([
+                'quantity'=>DB::raw('quantity + '.$quantity)
+            ]);
+        }else{
+            CartItem::create([
+                'user_id'=>$userId,
+                'product_id'=>$productId,
+                'quantity'=>$quantity,
+                'price'=>$price,
+                'variation_type_option_ids'=>$optionIds
+            ]);
+        }
+    }
 
     protected function saveItemToCookies(int $productId, int $quantity, array $optionIds): void {}
 
