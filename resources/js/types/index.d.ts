@@ -95,5 +95,5 @@ export type PageProps<
     ziggy: Config & { location: string };
     totalQuantity:number,
     totalPrice:number,
-    cartItems: CartItem[]
+    miniCartItems: CartItem[]
 };
