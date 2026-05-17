@@ -81,6 +81,7 @@ export type PaginationProps<T> = {
 export type PageProps<
     T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
+    csrf_token: string;
     auth: {
         user: User;
     };
