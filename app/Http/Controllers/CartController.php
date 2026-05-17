@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Services\CarService;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -11,9 +11,9 @@ class CartController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(CarService $carService)
+    public function index(CartService $cartService)
     {   
-        dd($carService);
+        dd($cartService);
     }
 
   
@@ -21,15 +21,20 @@ class CartController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Product $product, CarService $carService)
+    public function store(Request $request, Product $product, CartService $cartService)
     {
-        //
+        $request->mergeIfMissing(['quantity'=>1]);
+        $data = $request->validate([
+            'options_ids'=>['nullable','array'],
+            'quantity'=>['required','integer','min:1'],
+
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product, CarService $carService)
+    public function update(Request $request, Product $product, CartService $cartService)
     {
         //
     }
@@ -37,7 +42,7 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request ,Product $product, CarService $carService)
+    public function destroy(Request $request ,Product $product, CartService $cartService)
     {
         //
     }

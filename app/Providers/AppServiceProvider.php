@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\CarService;
+use App\Services\CartService;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,8 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(CarService::class,function($app){
-            return new CarService();
+        $this->app->singleton(CartService::class,function($app){
+            return new CartService();
         });
     }
 
