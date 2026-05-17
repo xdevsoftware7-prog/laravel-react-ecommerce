@@ -78,8 +78,20 @@ class CartService
         }
         return [];
     }
-    public function  getTotalQuantity() {}
-    public function  getTotalPrice() {}
+    public function  getTotalQuantity() {
+        $totalQuantity = 0;
+        foreach($this->getCartItems() as $item){
+            $totalQuantity += $item['quantity'];
+        }
+        return $totalQuantity;
+    }
+    public function  getTotalPrice() {
+        $total = 0;
+        foreach($this->getCartItems() as $item){
+            $total += $item['price'] * $item['quantity'];
+        }
+        return $total;
+    }
 
     protected function updateItemQuantityInDatabase(int $productId, int $quantity, array $optionIds): void {}
 
