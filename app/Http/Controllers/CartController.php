@@ -30,7 +30,7 @@ class CartController extends Controller
 
         ]);
         $cartService->addItemToCart($product, $data['qunatity'], $data['option_ids']);
-        return back()->with('success','Product addedd to cart successfully!');
+        return back()->with('success', 'Product addedd to cart successfully!');
     }
 
     /**
@@ -39,13 +39,13 @@ class CartController extends Controller
     public function update(Request $request, Product $product, CartService $cartService)
     {
         $request->validate([
-            'quantity'=>['integer','min:1']
+            'quantity' => ['integer', 'min:1']
         ]);
         $optionIds = $request->input('option_ids');
         $quantity  = $request->input('quantity');
 
         $cartService->updateItemQuantity($product->id, $quantity, $optionIds);
-        return back()->with('success','Quantity was updated');
+        return back()->with('success', 'Quantity was updated');
     }
 
     /**
@@ -53,6 +53,8 @@ class CartController extends Controller
      */
     public function destroy(Request $request, Product $product, CartService $cartService)
     {
-        //
+        $optionIds = $request->input('option_ids');
+        $cartService->removeItemFromCart($product->id, $optionIds);
+        return back()->with('success', 'Product was removed');
     }
 }
