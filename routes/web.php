@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Foundation\Application;
@@ -15,9 +16,13 @@ Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::post('/cart/store/{product}',function(){
+Route::controller(CartController::class)->group(function(){
+    Route::post('/cart','index')->name('cart.index');
+    Route::post('/cart/store/{product}','store')->name('cart.store');
+    Route::put('/cart/{product}','updated')->name('cart.update');
+    Route::delete('/cart/{product}','destroy')->name('cart.destroy');
+});
 
-})->name('cart.store');
 
 
 
