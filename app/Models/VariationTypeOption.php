@@ -20,5 +20,7 @@ class VariationTypeOption extends Model implements HasMedia
         $this->addMediaConversion('large')->width(1200);
     }
 
-    
+    public function variationType(){
+        return $this->belongsTo(VariationType::class);
+    }
 }
