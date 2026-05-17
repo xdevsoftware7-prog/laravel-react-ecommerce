@@ -6,6 +6,7 @@ use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\VariationTypeOption;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 class CartService
@@ -105,6 +106,17 @@ class CartService
                 'qunatity'=>$quantity
             ]);
         }
+    }
+    protected function updateItemQuantityInCookies(int $productId, int $quantity, array $optionIds){
+        $cartItems = $this->getCarItemsFromCookies();
+        ksort($optionIds);
+        $itemKey = $productId .'_'. json_encode($optionIds);
+
+        if(isset($cartItems[$itemKey])){
+            $cartItems[$itemKey]['quantity'] = $quantity;
+        }
+
+        Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
     }
 
     protected function saveItemToDatabase(int $productId, int $quantity, array $optionIds): void {}
