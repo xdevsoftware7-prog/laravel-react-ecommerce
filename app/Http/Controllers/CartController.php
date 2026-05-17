@@ -38,7 +38,14 @@ class CartController extends Controller
      */
     public function update(Request $request, Product $product, CartService $cartService)
     {
-        //
+        $request->validate([
+            'quantity'=>['integer','min:1']
+        ]);
+        $optionIds = $request->input('option_ids');
+        $quantity  = $request->input('quantity');
+
+        $cartService->updateItemQuantity($product->id, $quantity, $optionIds);
+        return back()->with('success','Quantity was updated');
     }
 
     /**
