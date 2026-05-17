@@ -25,11 +25,11 @@ class CartController extends Controller
     {
         $request->mergeIfMissing(['quantity' => 1]);
         $data = $request->validate([
-            'options_ids' => ['nullable', 'array'],
+            'option_ids' => ['nullable', 'array'],
             'quantity' => ['required', 'integer', 'min:1'],
 
         ]);
-        $cartService->addItemToCart($product, $data['qunatity'], $data['option_ids']);
+        $cartService->addItemToCart($product, $data['quantity'], $data['option_ids']);
         return back()->with('success', 'Product addedd to cart successfully!');
     }
 
