@@ -153,7 +153,7 @@ export default function Show({
           {type.options.map((option) => {
             const isSelected = selectedOptions[type.id]?.id === option.id;
             if (
-              type.type === "image" &&
+              type.type === "Image" &&
               option.images &&
               option.images.length > 0
             ) {
