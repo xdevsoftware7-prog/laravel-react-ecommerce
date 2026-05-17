@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react'
 import React from 'react'
 
 export default function Navbar() {
-  const {auth} = usePage().props;
+  const {auth,totalPrice,totalQuantity} = usePage().props;
   const {user} = auth;
   return (
     <div className="navbar bg-base-100">

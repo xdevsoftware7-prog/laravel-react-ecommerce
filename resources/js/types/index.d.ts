@@ -72,4 +72,6 @@ export type PageProps<
         user: User;
     };
     ziggy: Config & { location: string };
+    totalQuantity:number,
+    totalPrice:number
 };
