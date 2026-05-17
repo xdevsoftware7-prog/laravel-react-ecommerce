@@ -58,18 +58,18 @@ class CartService
                         ];
                     }
                     $cartItemData[] = [
-                        'id'=>$cartItem['id'],
-                        'product_id'=>$product->id,
-                        'title'=>$product->title,
-                        'slug'=>$product->slug,
-                        'price'=>$cartItem['price'],
-                        'quantity'=>$cartItem['quantity'],
-                        'option_ids'=>$cartItem['option_ids'],
-                        'options'=>$optionInfo,
-                        'image'=>$imageUrl ?: $product->getFirstMediaUrl('images','small'),
-                        'user'=>[
-                            'id'=>$product->created_by,   
-                            'name'=>$product->user->vendor->store_name,
+                        'id' => $cartItem['id'],
+                        'product_id' => $product->id,
+                        'title' => $product->title,
+                        'slug' => $product->slug,
+                        'price' => $cartItem['price'],
+                        'quantity' => $cartItem['quantity'],
+                        'option_ids' => $cartItem['option_ids'],
+                        'options' => $optionInfo,
+                        'image' => $imageUrl ?: $product->getFirstMediaUrl('images', 'small'),
+                        'user' => [
+                            'id' => $product->created_by,
+                            'name' => $product->user->vendor->store_name,
                         ]
                     ];
                 }
@@ -78,89 +78,102 @@ class CartService
             }
             return $this->cachedCartItems;
         } catch (\Exception $e) {
-            Log::error($e->getMessage(). PHP_EOL . $e->getTraceAsString());
+            Log::error($e->getMessage() . PHP_EOL . $e->getTraceAsString());
         }
         return [];
     }
-    public function  getTotalQuantity() {
+    public function  getTotalQuantity()
+    {
         $totalQuantity = 0;
-        foreach($this->getCartItems() as $item){
+        foreach ($this->getCartItems() as $item) {
             $totalQuantity += $item['quantity'];
         }
         return $totalQuantity;
     }
-    public function  getTotalPrice() {
+    public function  getTotalPrice()
+    {
         $total = 0;
-        foreach($this->getCartItems() as $item){
+        foreach ($this->getCartItems() as $item) {
             $total += $item['price'] * $item['quantity'];
         }
         return $total;
     }
 
-    protected function updateItemQuantityInDatabase(int $productId, int $quantity, array $optionIds): void {
+    protected function updateItemQuantityInDatabase(int $productId, int $quantity, array $optionIds): void
+    {
         $userId = Auth::id();
-        $cartItem = CartItem::where('user_id',$userId)
-        ->where('product_id',$productId)
-        ->where('variation_type_option_ids',json_encode($optionIds))->first();
+        $cartItem = CartItem::where('user_id', $userId)
+            ->where('product_id', $productId)
+            ->where('variation_type_option_ids', json_encode($optionIds))->first();
 
-        if($cartItem){
+        if ($cartItem) {
             $cartItem->update([
-                'qunatity'=>$quantity
+                'qunatity' => $quantity
             ]);
         }
     }
-    protected function updateItemQuantityInCookies(int $productId, int $quantity, array $optionIds){
+    protected function updateItemQuantityInCookies(int $productId, int $quantity, array $optionIds)
+    {
         $cartItems = $this->getCarItemsFromCookies();
         ksort($optionIds);
-        $itemKey = $productId .'_'. json_encode($optionIds);
+        $itemKey = $productId . '_' . json_encode($optionIds);
 
-        if(isset($cartItems[$itemKey])){
+        if (isset($cartItems[$itemKey])) {
             $cartItems[$itemKey]['quantity'] = $quantity;
         }
 
-        Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
+        Cookie::queue(self::COOKIE_NAME, json_encode($cartItems), self::COOKIE_LIFETIME);
     }
 
-    protected function saveItemToDatabase(int $productId, int $quantity,float $price, array $optionIds): void {
+    protected function saveItemToDatabase(int $productId, int $quantity, float $price, array $optionIds): void
+    {
         $userId = Auth::id();
         ksort($optionIds);
-        $cartItem = CartItem::where('user_id',$userId)->where('product_id',$productId)->where('variation_type_option_ids',json_encode($optionIds))->first();
-        
-        if($cartItem){
+        $cartItem = CartItem::where('user_id', $userId)->where('product_id', $productId)->where('variation_type_option_ids', json_encode($optionIds))->first();
+
+        if ($cartItem) {
             $cartItem->update([
-                'quantity'=>DB::raw('quantity + '.$quantity)
+                'quantity' => DB::raw('quantity + ' . $quantity)
             ]);
-        }else{
+        } else {
             CartItem::create([
-                'user_id'=>$userId,
-                'product_id'=>$productId,
-                'quantity'=>$quantity,
-                'price'=>$price,
-                'variation_type_option_ids'=>$optionIds
+                'user_id' => $userId,
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'price' => $price,
+                'variation_type_option_ids' => $optionIds
             ]);
         }
     }
 
-    protected function saveItemToCookies(int $productId, int $quantity, float $price, array $optionIds): void {
+    protected function saveItemToCookies(int $productId, int $quantity, float $price, array $optionIds): void
+    {
         $cartItems = $this->getCarItemsFromCookies();
         ksort($optionIds);
-        $itemKey = $productId .'_'. json_encode($optionIds);
-        if(isset($cartItems[$itemKey])){
+        $itemKey = $productId . '_' . json_encode($optionIds);
+        if (isset($cartItems[$itemKey])) {
             $cartItems[$itemKey]['quantity'] += $quantity;
             $cartItem[$itemKey]['price'] = $price;
-        }else{
+        } else {
             $cartItems[$itemKey] = [
                 'id' => Str::uuid(),
-                'product_id'=>$productId,
-                'quantity'=>$quantity,
-                'price'=>$price,
-                'option_ids'=>$optionIds
+                'product_id' => $productId,
+                'quantity' => $quantity,
+                'price' => $price,
+                'option_ids' => $optionIds
             ];
         }
-        Cookie::queue(self::COOKIE_NAME,json_encode($cartItems),self::COOKIE_LIFETIME);
+        Cookie::queue(self::COOKIE_NAME, json_encode($cartItems), self::COOKIE_LIFETIME);
     }
 
-    protected function removeItemFromDatabase(int $productId, int $quantity, array $optionIds): void {}
+    protected function removeItemFromDatabase(int $productId, int $quantity, array $optionIds): void
+    {
+        $userId = Auth::id();
+        ksort($optionIds);
+        CartItem::where('user_id', $userId)
+            ->where('product_id', $productId)
+            ->where('variation_type_option_ids', json_encode($optionIds))->delete();
+    }
 
     protected function removeItemFromCookies(int $productId, int $quantity, array $optionIds): void {}
 
