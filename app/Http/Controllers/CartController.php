@@ -15,7 +15,7 @@ class CartController extends Controller
     public function index(CartService $cartService)
     {
         return Inertia::render('Cart/Index', [
-            'cartItems'=>$cartService->getCartItemsGrouped(),
+            'cartItems' => $cartService->getCartItemsGrouped(),
 
         ]);
     }
@@ -31,9 +31,9 @@ class CartController extends Controller
         $data = $request->validate([
             'option_ids' => ['nullable', 'array'],
             'quantity' => ['required', 'integer', 'min:1'],
-
+            'price' => ['nullable', 'numeric'],
         ]);
-        $cartService->addItemToCart($product, $data['quantity'], $data['option_ids']);
+        $cartService->addItemToCart($product, $data['quantity'], $data['option_ids'], $data['price']);
         return back()->with('success', 'Product addedd to cart successfully!');
     }
 
@@ -63,7 +63,5 @@ class CartController extends Controller
     }
 
 
-    public function checkout(){
-        
-    }
+    public function checkout() {}
 }

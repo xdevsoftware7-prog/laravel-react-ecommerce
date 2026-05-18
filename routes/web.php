@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 Route::get('/', [ProductController::class, 'home'])->name('dashboard');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
-
+Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('product.show');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');

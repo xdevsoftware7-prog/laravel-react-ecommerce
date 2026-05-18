@@ -95,7 +95,6 @@ export default function Show({
       );
     }
   }, []);
-
   const getOptionIdsMap = (newOptions: object) => {
     return Object.fromEntries(
       Object.entries(newOptions).map(([typeId, option]) => [typeId, option.id]),

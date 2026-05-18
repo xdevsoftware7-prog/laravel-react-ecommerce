@@ -37,21 +37,24 @@ class HandleInertiaRequests extends Middleware
         $totalPrice = $cartService->getTotalPrice();
 
         $cartItems = $cartService->getCartItems();
-
-        return [
+        $result = [
             ...parent::share($request),
-            'csrf_token'=>csrf_token(),
+            'csrf_token' => csrf_token(),
             'auth' => [
                 'user' => $request->user(),
             ],
-            'ziggy' => fn () => [
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
             'success' => session('success'),
-            'totalPrice'=>$totalPrice,
-            'totalQuantity'=>$totalQunatity,
-            'minCartItems'=>$cartItems
-        ];
+            'totalPrice' => $totalPrice,
+            'totalQuantity' => $totalQunatity,
+            'miniCartItems' => $cartItems
+            ];
+
+            // dd($result);
+
+        return $result;
     }
 }
